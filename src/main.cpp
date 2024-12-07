@@ -4,12 +4,14 @@
 
 // For led chips like WS2812, which have a data line, ground, and power, you just
 // need to define DATA_PIN.
-#define DATA_PIN 3
+#define DATA_PIN_HOUSE 3
+#define DATA_PIN_GARDEN 4
 
 // How many leds in your strip?
 // Define the array of leds
 #define NUM_LEDS 60 //60
-CRGB leds[NUM_LEDS];
+CRGB leds_house[NUM_LEDS];
+CRGB leds_garden[NUM_LEDS];
 
 
 double time = 0.0;                // Initial value between 0 and 672 (24 hours, 7 days, 4 seasons)
@@ -23,7 +25,9 @@ double hour_night_loops = 100;    // number of loops in one hour during day
  */
 void setup() {
   Serial.begin(9600);
-  FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS); // GRB ordering is typical
+  FastLED.addLeds<WS2812B, DATA_PIN_HOUSE, RGB>(leds_house, NUM_LEDS); // GRB ordering is typical
+
+  FastLED.addLeds<WS2812B, DATA_PIN_GARDEN, RGB>(leds_garden, NUM_LEDS); // GRB ordering is typical
 }
 
 /**
@@ -57,7 +61,11 @@ void loop() {
   appropriate color for that LED. The calculated color is then assigned to the corresponding element
   in the `leds` array. */
   for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = getSkyColor(time, i, NUM_LEDS);
+    leds_house[i] = getSkyColor(time, i, NUM_LEDS);
+  }
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds_garden[i] = getGardenColor(time, i, NUM_LEDS);
   }
 
   FastLED.show();

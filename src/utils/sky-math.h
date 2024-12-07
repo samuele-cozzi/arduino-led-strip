@@ -122,3 +122,43 @@ CRGB getSkyColor(double _time, int _long, int _tot) {
 
   return CRGB(green,red,blue);
 }
+
+
+/**
+ * The function `getSkyColor` returns a CRGB color value based on the time, longitude, and total number
+ * of locations.
+ * 
+ * @param _time The _time parameter represents the current time. It is a double value that can be used
+ * to calculate the position of the sun and determine the color of the sky.
+ * @param _long The parameter `_long` represents the longitude of a specific location.
+ * @param _tot The parameter "_tot" represents the total number of divisions in the sky. It is used in
+ * calculations to determine the position of the sun and the dispersion of its light.
+ * 
+ * @return a CRGB object, which represents a color in the RGB color model.
+ */
+
+CRGB getGardenColor(double _time, int _long, int _tot) {
+
+  double radiant = getRadiantFromTime(_time);
+  int sun_long = getSunLong(_time, _tot);
+  double sun_dispersion = getSunDispersion(sun_long, _tot);
+
+  int red = 0;
+  int green = 0;
+  int blue = 0;
+
+  if (isNight(_time)){
+    blue = min(getBlue4Sky(radiant),250);
+  }
+  else
+  {
+    // Sky Colors
+    red = min(0,250);
+    green = min(getGreen4Sky(radiant),250);
+    blue = min(getBlue4Sky(radiant), 250);
+  }
+
+  //Serial.println("Current Value R-" + String(red) + "-G-" + String(green) + "-B-" + String(blue) + "-");
+
+  return CRGB(green,red,blue);
+}
